@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hristiyan Georgiev – Applied Data Science & AI</title>
+<meta name="description" content="Portfolio of Hristiyan Georgiev, Applied Data Science & AI student at BUas: computer vision, statistics and applied research.">
+<meta property="og:title" content="Hristiyan Georgiev – Applied Data Science & AI">
+<meta property="og:description" content="Computer vision, statistics and applied research projects.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23B02E5A'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3EHG%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one page app. Home = hero (name + interactive pixel-ownership plate) + project card grid + about + contact.
+   Each project opens as its own case-study view (hash route) with back / next navigation. */
+:root{
+  --bg:#F5F7F3; --surface:#FFFFFF; --sunk:#ECF0E9; --line:#DCE2D8; --ink:#121A15; --muted:#5A665E;
+  --plant-a:#B02E5A; --plant-b:#2D63A0;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --s-1:.8125rem; --s0:1.0625rem; --s1:1.3rem; --s2:1.75rem; --s3:clamp(2rem,4vw,2.75rem); --s4:clamp(2.7rem,7vw,5rem);
+  --radius:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1110; --surface:#141B18; --sunk:#101614; --line:#26302B; --ink:#E4EAE3; --muted:#97A39B;
+  --plant-a:#DB5A84; --plant-b:#4F8BD6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1110; --surface:#141B18; --sunk:#101614; --line:#26302B; --ink:#E4EAE3; --muted:#97A39B;
+  --plant-a:#DB5A84; --plant-b:#4F8BD6; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:var(--s0);line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1120px;margin:0 auto}
+a{color:inherit;text-decoration-color:var(--plant-a);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--plant-a);outline-offset:3px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--display);font-weight:750;line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.015em}
+h2{font-size:var(--s3);font-stretch:110%}
+h3{font-size:var(--s2);font-stretch:105%}
+h4{font-size:var(--s1);font-weight:700}
+p{margin:0;max-width:68ch}
+.label{font-family:var(--mono);font-size:var(--s-1);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.prose{display:grid;gap:14px}
+.prose ul{margin:0;padding-left:1.15em;display:grid;gap:10px;max-width:68ch}
+.prose li::marker{color:var(--plant-a)}
+.muted{color:var(--muted)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid transparent;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .in{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px))}
+.brand{font-family:var(--display);font-weight:750;font-stretch:112%;text-decoration:none;font-size:1.05rem}
+.brand span{color:var(--plant-a)}
+.top nav{display:flex;gap:20px;flex-wrap:wrap}
+.top nav a{font-family:var(--mono);font-size:var(--s-1);text-transform:uppercase;letter-spacing:.06em;text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:56px 40px}
+.hero h1{font-size:var(--s4);font-stretch:120%;font-weight:800;letter-spacing:-.025em;line-height:.95;margin-top:14px}
+.hero .lead{font-size:var(--s1);line-height:1.5;margin-top:22px;max-width:38ch}
+.hero .chips{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;color:var(--muted)}
+.chip.on{border-color:var(--plant-a);color:var(--ink)}
+.hero .cta{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-weight:600;font-size:.95rem;text-decoration:none;border-radius:999px;padding:10px 18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--plant-a)}
+.btn.primary:hover{background:var(--plant-a);border-color:var(--plant-a);color:#fff}
+
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:grid;gap:12px;min-width:0}
+.demo canvas{width:100%;aspect-ratio:1/1;height:auto;display:block;max-width:420px;justify-self:center;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,var(--sunk),var(--surface) 72%);box-shadow:inset 0 0 0 1px var(--line)}
+.demo .row{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.demo input[type=range]{width:100%;accent-color:var(--plant-a)}
+.demo .read{font-size:.92rem;min-height:2.9em}
+.key{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* sections */
+section.block{padding-block:56px 8px;display:grid;gap:26px}
+.sec-head{display:grid;gap:10px}
+.sec-head p{color:var(--muted)}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;min-width:0;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-3px);border-color:var(--plant-a);box-shadow:0 10px 30px -18px color-mix(in srgb,var(--ink) 40%,transparent)}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+.card .thumb{background:var(--sunk);border-bottom:1px solid var(--line);aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden}
+.card .thumb svg,.card .thumb canvas{width:100%;height:100%;display:block}
+.card .meta{padding:16px 18px 18px;display:grid;gap:8px;align-content:start;flex:1}
+.card .meta .top-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.card .code{font-family:var(--mono);font-size:.82rem;color:var(--plant-a)}
+.card h3{font-size:1.25rem;font-stretch:104%}
+.card p{color:var(--muted);font-size:.95rem}
+.card .go{margin-top:auto;padding-top:6px;font-family:var(--mono);font-size:.78rem;color:var(--ink)}
+.card.feature{grid-column:span 2;grid-row:span 2}
+.card.feature .thumb{aspect-ratio:auto;flex:1;min-height:260px}
+.card.feature h3{font-size:var(--s2)}
+.card.feature .parts{display:flex;flex-wrap:wrap;gap:8px}
+.card.now{border-color:var(--plant-b);grid-column:1/-1;flex-direction:row}
+.card.now .thumb{aspect-ratio:auto;width:min(36%,360px);flex:none;border-bottom:0;border-right:1px solid var(--line)}
+.card.now:hover{transform:none;border-color:var(--plant-b);box-shadow:none}
+.status{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--plant-b)}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--plant-b)}
+.thumb text{font-family:var(--mono);fill:var(--muted)}
+
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.toolkit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 26px}
+.toolkit div{display:grid;gap:4px;align-content:start}
+.toolkit p{font-size:.95rem;color:var(--muted)}
+.contact{display:grid;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.crow{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px}
+.crow .label{min-width:80px}
+.cval{font-family:var(--display);font-weight:650;font-size:var(--s1);user-select:all;overflow-wrap:anywhere;min-width:0}
+.copy{font-family:var(--mono);font-size:var(--s-1);text-transform:uppercase;letter-spacing:.06em;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
+.copy:hover{border-color:var(--plant-a)}
+
+/* case-study views */
+.view{padding-block:28px 0}
+.back{display:inline-flex;gap:8px;align-items:center;font-family:var(--mono);font-size:var(--s-1);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--ink)}
+.case-head{display:grid;gap:14px;padding-block:22px 28px;border-bottom:1px solid var(--line)}
+.case-head .code{font-family:var(--mono);color:var(--plant-a)}
+.case-head h2{font-size:clamp(2.1rem,5vw,3.4rem);font-stretch:112%}
+.case-head .intro{font-size:var(--s1);line-height:1.5;max-width:60ch}
+.facts{display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:4px}
+.facts div{display:grid;gap:2px}
+.facts b{font-weight:600}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.summary div{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:grid;gap:6px;align-content:start}
+.summary div:last-child{border-color:var(--plant-a)}
+.summary p{font-size:.97rem}
+@media (max-width:720px){.summary{grid-template-columns:minmax(0,1fr)}}
+.case-body{display:grid;gap:30px;padding-block:30px;max-width:860px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:12px;min-width:0}
+.panel .cap{font-family:var(--mono);font-size:var(--s-1);color:var(--muted)}
+.panel .title{font-family:var(--mono);font-size:var(--s-1);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;margin:0;padding:0;list-style:none;row-gap:8px}
+.flow li{display:flex;align-items:center}
+.flow li:not(:last-child)::after{content:"→";font-family:var(--mono);color:var(--muted);padding:0 8px}
+.node{border:1px solid var(--line);background:var(--sunk);padding:8px 11px;border-radius:8px;font-family:var(--mono);font-size:.78rem;line-height:1.35;max-width:190px;color:var(--muted)}
+.node b{display:block;font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--ink)}
+.node.a{border-color:var(--plant-a)} .node.b{border-color:var(--plant-b)}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.step{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--sunk);color:var(--muted);border-radius:999px;padding:6px 12px;cursor:pointer}
+.step[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.step-body{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start;min-height:5.5em}
+.step-body .n{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--plant-a);font-variant-numeric:tabular-nums}
+.step-body h4{margin-bottom:4px}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.num{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:grid;gap:4px}
+.num .v{font-family:var(--display);font-weight:800;font-stretch:110%;font-size:2rem;line-height:1;font-variant-numeric:tabular-nums}
+.num .k{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.note{border-left:3px solid var(--plant-b);padding:4px 0 4px 16px;color:var(--muted);max-width:68ch}
+.note strong{color:var(--ink)}
+blockquote{margin:0;font-size:1.1rem;max-width:60ch;padding-left:16px;border-left:3px solid var(--plant-a)}
+blockquote cite{display:block;font-style:normal;font-family:var(--mono);font-size:var(--s-1);color:var(--muted);margin-top:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:.74rem;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--line);padding-top:24px}
+.pager a{display:grid;gap:4px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px}
+.pager a:hover{border-color:var(--plant-a)}
+.pager a b{font-family:var(--display);font-weight:700}
+.pager .next{text-align:right}
+
+/* charts */
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.chart .strong{fill:var(--ink);font-weight:500}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--muted);stroke-width:1}
+.chart .zero{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3}
+.chart .ci{stroke:var(--plant-a);stroke-width:2;stroke-linecap:round}
+.chart .dot-a{fill:var(--plant-a);stroke:var(--surface);stroke-width:2}
+.chart .dot-n{fill:var(--muted);stroke:var(--surface);stroke-width:2}
+.chart .km-mut,.chart .km-wt{fill:none;stroke-width:2;stroke-linejoin:round}
+.chart .km-mut{stroke:var(--plant-a)} .chart .km-wt{stroke:var(--plant-b)}
+.chart .dot-mut{fill:var(--plant-a);stroke:var(--surface);stroke-width:2} .chart .dot-wt{fill:var(--plant-b);stroke:var(--surface);stroke-width:2}
+.chart .lab-mut,.chart .lab-wt{fill:var(--ink);font-weight:500}
+.chart .median{stroke:var(--muted);stroke-width:1;stroke-dasharray:2 4}
+.chart .cross{stroke:var(--muted);stroke-width:1}
+.chart .bar{fill:var(--muted);opacity:.55} .chart .bar-hi{fill:var(--plant-a)}
+.charts2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.scrollx{overflow-x:auto;margin-inline:-4px;padding-inline:4px}
+.scrollx svg{min-width:560px}
+.km-read{font-family:var(--mono);font-size:var(--s-1);color:var(--ink);min-height:1.4em;font-variant-numeric:tabular-nums}
+.keyrow{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:var(--s-1);color:var(--muted)}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card.feature{grid-column:span 2;grid-row:auto}
+  .card.feature .thumb{aspect-ratio:16/9;min-height:0}
+  .about{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:720px){
+  .hero{grid-template-columns:minmax(0,1fr);padding-block:32px 16px;gap:28px}
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .card.feature{grid-column:auto}
+  .card.now{flex-direction:column}
+  .card.now .thumb{width:auto;aspect-ratio:16/9;border-right:0;border-bottom:1px solid var(--line)}
+  .toolkit{grid-template-columns:minmax(0,1fr)}
+  .pager{grid-template-columns:minmax(0,1fr)}
+  .top nav{gap:14px}
+}
+</style>
+</head>
+<body>
+
+
+<header class="top" id="topbar">
+  <div class="in">
+    <a class="brand" href="#home">Hristiyan Georgiev<span>.</span></a>
+    <nav aria-label="Main">
+      <a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============ HOME ============ -->
+<div class="view-home" data-view="home">
+  <div class="hero">
+    <div>
+      <p class="label">Data science &amp; AI · Breda University of Applied Sciences</p>
+      <h1>Hristiyan Georgiev</h1>
+      <p class="lead">Messy data and no clear answer yet? That's where I do my best work. I like complex problems and finding a way to fix them, and I usually go past the original brief to get there.</p>
+      <div class="chips">
+        <span class="chip on">Computer vision</span><span class="chip">Statistics</span><span class="chip">Applied research</span><span class="chip">MLOps</span><span class="chip">Genomics</span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#phenotyping">Read the root research →</a>
+        <a class="btn" href="#work">All projects</a>
+      </div>
+    </div>
+    <figure class="demo" style="margin:0">
+      <canvas id="plate" width="420" height="420" role="img" aria-label="Two seedlings on an agar plate whose roots cross. Inside the overlap, root pixels are coloured by which plant they are assigned to."></canvas>
+      <label for="own" class="label" style="color:var(--ink)">Who owns each pixel?</label>
+      <input id="own" type="range" min="0" max="100" value="0" aria-describedby="own-read">
+      <div class="row"><span>Boxes only</span><span>With colour context</span></div>
+      <p class="read" id="own-read">Bounding boxes alone split the overlap down the middle, so roots that cross it change colour halfway. Drag the slider.</p>
+      <div class="row" style="justify-content:flex-start;gap:16px"><span class="key"><span class="sw" style="background:var(--plant-a)"></span>plant A</span><span class="key"><span class="sw" style="background:var(--plant-b)"></span>plant B</span><span>schematic</span></div>
+    </figure>
+  </div>
+
+  <section class="block" id="work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <p class="label">Selected work · 2024–2026</p>
+      <h2 id="work-h">Projects</h2>
+    </div>
+    <div class="grid">
+      <a class="card feature" href="#phenotyping">
+        <div class="thumb"><canvas id="thumb-roots" width="640" height="360" aria-hidden="true"></canvas></div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y2·B → Y2·D</span><span class="label">Nov 2025 – Jun 2026</span></div>
+          <h3>Untangling plant roots</h3>
+          <p>Half a year on one problem for the Netherlands Plant Eco-phenotyping Centre: a five-model vision pipeline that guides a lab robot, a controlled study on its weakest point, and a production service.</p>
+          <div class="parts"><span class="tag">Pipeline + robot</span><span class="tag">Research study</span><span class="tag">MLOps</span></div>
+          <span class="go">Read the case study →</span>
+        </div>
+      </a>
+      <a class="card" href="#cancer">
+        <div class="thumb"><svg viewBox="0 0 320 180" aria-hidden="true">
+<line x1="24" y1="150" x2="300" y2="150" stroke="var(--line)"/><line x1="24" y1="87.0" x2="300" y2="87.0" stroke="var(--line)" stroke-dasharray="2 4"/>
+<path d="M24.0,24.0H30.5V25.2H30.8V26.5H31.3V27.7H32.1V29.0H32.4V30.3H32.6V31.6H33.0V32.8H33.6V34.1H33.8V35.4H34.1V36.7H34.2V38.0H34.3V39.3H34.8V40.6H37.2V41.9H37.3V43.2H37.7V44.5H38.7V45.8H38.7V47.2H38.9V48.5H39.6V49.9H40.3V51.3H40.7V52.6H41.6V54.0H44.1V55.5H44.7V58.6H46.5V60.2H46.6V61.8H47.0V63.5H47.6V65.1H47.8V66.8H49.4V68.6H49.5V70.4H49.7V72.3H51.2V74.2H52.8V76.1H54.5V78.0H54.9V80.0H55.2V82.0H56.5V84.0H58.2V88.2H58.4V92.3H58.9V94.3H69.2V97.0H73.9V99.8H93.3V104.0H108.0V108.6H111.2V113.2H131.7V120.5H194.8V130.4H293.6V140.2H293.6V140.2" fill="none" stroke="var(--plant-b)" stroke-width="2"/>
+<path d="M24.0,24.0H24.3V24.3H25.5V24.7H26.1V25.0H27.2V25.4H28.4V25.7H28.7V26.1H34.2V26.4H40.1V26.8H42.4V27.2H42.6V27.7H43.2V28.1H43.6V28.5H46.3V29.0H47.6V29.5H48.3V30.0H48.5V30.5H51.3V31.0H52.8V31.5H54.0V32.1H57.2V32.7H58.7V33.4H61.3V34.0H62.9V34.7H63.3V35.4H64.1V36.1H64.4V36.9H64.5V37.6H65.4V38.3H65.6V39.1H66.5V39.8H70.7V40.6H71.3V42.3H71.8V43.2H72.9V44.0H74.8V44.9H75.3V45.9H76.3V46.8H76.8V47.8H77.6V48.8H80.1V49.9H80.3V50.9H80.8V52.0H83.3V53.2H86.6V54.5H87.0V55.8H88.6V57.1H89.2V58.5H90.7V59.9H99.4V61.4H103.4V63.1H104.4V64.8H105.1V66.4H105.6V68.1H117.1V69.9H119.8V71.6H120.0V73.4H120.0V75.2H128.7V77.2H137.4V79.4H144.1V81.8H145.5V84.4H146.5V87.2H149.9V90.2H160.6V93.5H174.0V97.0H195.4V101.8H196.7V106.6H209.2V112.1H210.6V117.5H221.1V122.9H223.5V128.3H244.6V135.5H256.8V135.5" fill="none" stroke="var(--plant-a)" stroke-width="2"/>
+<text x="300" y="71.9" text-anchor="end" font-size="10" style="fill:var(--plant-a)">IDH1-mutant · median 8.0 y</text>
+<text x="300" y="145.0" text-anchor="end" font-size="10" style="fill:var(--plant-b)">wild-type · 2.2 y</text>
+<text x="24" y="168" font-size="10">survival, TCGA-LGG</text>
+</svg></div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y1·A</span><span class="label">2024</span></div>
+          <h3>Cancer and gene mutations</h3>
+          <p>Survival analysis of IDH1 and TP53 mutations in brain tumours.</p>
+          <span class="go">Open →</span>
+        </div>
+      </a>
+      <a class="card" href="#ocutrack">
+        <div class="thumb">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <g fill="none" stroke-width="2.5" stroke-linecap="round">
+              <path d="M40 90 Q80 55 120 90 Q80 125 40 90Z" stroke="var(--plant-b)"/><circle cx="80" cy="90" r="13" fill="var(--plant-b)"/>
+              <path d="M200 92 Q240 112 280 92" stroke="var(--plant-a)"/><path d="M212 98l-6 9M240 102v10M268 98l6 9" stroke="var(--plant-a)" stroke-width="2"/>
+            </g>
+            <text x="80" y="146" text-anchor="middle" font-size="11">open</text><text x="240" y="146" text-anchor="middle" font-size="11">closed</text>
+            <text x="160" y="32" text-anchor="middle" font-size="11">~150,000 eye crops</text>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y1·C</span><span class="label">2025</span></div>
+          <h3>OCUTRACK</h3>
+          <p>Eye-state detection on a self-built dataset, labelled with active learning.</p>
+          <span class="go">Open →</span>
+        </div>
+      </a>
+      <a class="card" href="#readmission">
+        <div class="thumb">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <text x="90" y="92" text-anchor="middle" font-size="44" style="font-family:var(--display);font-weight:800;fill:var(--ink)">91%</text>
+            <text x="90" y="118" text-anchor="middle" font-size="11">accuracy</text>
+            <text x="230" y="92" text-anchor="middle" font-size="44" style="font-family:var(--display);font-weight:800;fill:var(--plant-a)">0.4%</text>
+            <text x="230" y="118" text-anchor="middle" font-size="11">readmissions caught</text>
+            <line x1="160" y1="56" x2="160" y2="124" stroke="var(--line)"/>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y1·B</span><span class="label">2024–25</span></div>
+          <h3>Hospital readmission</h3>
+          <p>Why the first, excellent-looking models were wrong.</p>
+          <span class="go">Open →</span>
+        </div>
+      </a>
+      <a class="card" href="#markets">
+        <div class="thumb">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <g font-size="12">
+              <text x="70" y="70" text-anchor="middle" style="fill:var(--plant-a)">▼ crash</text>
+              <text x="160" y="100" text-anchor="middle">▽ dip</text>
+              <text x="250" y="70" text-anchor="middle" style="fill:var(--plant-b)">▲ rally</text>
+            </g>
+            <line x1="30" y1="128" x2="290" y2="128" stroke="var(--line)"/>
+            <text x="160" y="150" text-anchor="middle" font-size="11">events labelled on minute bars · BKNG</text>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y1·D</span><span class="label">2025</span></div>
+          <h3>Market events from minute data</h3>
+          <p>Feature engineering for crash, dip and rally prediction.</p>
+          <span class="go">Open →</span>
+        </div>
+      </a>
+      <a class="card" href="#emotion">
+        <div class="thumb">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <rect x="40" y="48" width="240" height="44" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="160" y="75" text-anchor="middle" font-size="13" style="fill:var(--ink)">"Well, that went perfectly."</text>
+            <text x="100" y="128" text-anchor="middle" font-size="11">sentence alone: joy</text>
+            <text x="225" y="128" text-anchor="middle" font-size="11" style="fill:var(--plant-a)">in context: anger</text>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="top-row"><span class="code">Y2·A</span><span class="label">2025</span></div>
+          <h3>Emotion in dialogue</h3>
+          <p>Transformers, explainability, and why context needs memory.</p>
+          <span class="go">Open →</span>
+        </div>
+      </a>
+      <div class="card now" style="cursor:default">
+        <div class="thumb">
+          <svg viewBox="0 0 320 180" aria-hidden="true">
+            <g fill="none" stroke="var(--line)"><circle cx="160" cy="90" r="56"/><circle cx="160" cy="90" r="34"/><circle cx="160" cy="90" r="12"/></g>
+            <g fill="var(--plant-b)"><circle cx="146" cy="80" r="4"/><circle cx="171" cy="97" r="4"/><circle cx="185" cy="72" r="4"/><circle cx="133" cy="108" r="4"/><circle cx="160" cy="88" r="4"/></g>
+            <text x="160" y="168" text-anchor="middle" font-size="11">gaze · skin conductance · voice</text>
+          </svg>
+        </div>
+        <div class="meta">
+          <div class="top-row"><span class="status">In progress</span><span class="label">2026–</span></div>
+          <h3>PlaySmart</h3>
+          <p>Multimodal research on esports performance for the Breda Guardians roster: eye-tracking, skin-conductance rings, facial action units and voice comms feeding an AI coach. I'm adapting the pipeline from Valorant to League of Legends.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="about" aria-labelledby="about-h">
+    <div class="about">
+      <div class="sec-head" style="align-content:start">
+        <p class="label">About</p>
+        <h2 id="about-h">How I work</h2>
+        <div class="prose" style="color:var(--ink);margin-top:8px">
+          <p>I'm a third-year Applied Data Science &amp; AI student in Breda. I'm drawn to exploratory work: new domains, questions without a known answer, and data that has to be understood before it can be modelled. I tend to go past the brief, and I've learned to say clearly what a result does and doesn't prove.</p>
+          <p>I study full time and work alongside it. After five to six years in hospitality I joined The Streetfood Club in Breda as a bartender in 2026 and was promoted to closing lead and then assistant bar manager within months. Running a bar on a full night and running a research project ask for the same things: plan ahead, stay calm when something breaks, and keep the team informed.</p>
+        </div>
+      </div>
+      <div class="toolkit">
+        <div><span class="label">Research &amp; statistics</span><p>Study design, synthetic data, paired and non-parametric tests, bootstrap CIs, effect sizes, survival analysis</p></div>
+        <div><span class="label">Computer vision</span><p>SegFormer, RT-DETR, CNNs, transfer learning, MediaPipe, OpenCV, active learning</p></div>
+        <div><span class="label">Language</span><p>Transformer fine-tuning, prompting, retrieval-augmented generation, explainability (LRP)</p></div>
+        <div><span class="label">Machine learning</span><p>scikit-learn, XGBoost, class imbalance, clustering, time-series features, PPO and PID control</p></div>
+        <div><span class="label">Engineering</span><p>Python packaging, FastAPI, Docker, Airflow, MLflow, CI/CD, pytest, Postgres</p></div>
+        <div><span class="label">Analysis &amp; reporting</span><p>Power BI, R, SQL, model cards, research posters, data management plans</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contact" aria-labelledby="contact-h">
+    <div class="sec-head">
+      <p class="label">Contact</p>
+      <h2 id="contact-h">Get in touch</h2>
+      <p>I'm looking for research and data science roles where the question is still open. Email is the fastest way to reach me.</p>
+    </div>
+    <div class="contact">
+      <div class="crow"><span class="label">Email</span><span class="cval" id="mail">hristiyan_g@icloud.com</span><button type="button" id="copy-mail" class="copy">Copy</button></div>
+      <div class="crow"><span class="label">LinkedIn</span><a class="cval" href="https://www.linkedin.com/in/hristiyan-georgiev-5b992323b" target="_blank" rel="noopener">linkedin.com/in/hristiyan-georgiev-5b992323b</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ Y2B ============ -->
+<article class="view" data-view="phenotyping" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y2·B · Untangling plant roots, part 1 of 3</span>
+    <h2>Engineering robust plant phenotyping</h2>
+    <p class="intro">NPEC photographs thousands of <i>Arabidopsis</i> seedlings on agar plates. Scientists need each plant's main-root length and root-tip position so a robot can inoculate it. On real plates roots cross, seeds fail to germinate and condensation blurs the view. The brief asked for one segmentation model; I ended up with five working together.</p>
+    <div class="facts"><div><span class="label">When</span><b>Nov 2025 – Jan 2026</b></div><div><span class="label">Team</span><b>Individual</b></div><div><span class="label">Client</span><b>Netherlands Plant Eco-phenotyping Centre</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Measure the main root of every seedling on NPEC's plates, where roots cross, seeds float and condensation blurs the image, and guide a robot to each root tip.</p></div>
+      <div><span class="label">My approach</span><p>Five models working together: SegFormers for shoots, roots and seeds, a second seed model combined by agreement, and an RT-DETR detector trained on labels my own models produced. Then graph-based root measurement and a PID-controlled robot.</p></div>
+      <div><span class="label">Achievement</span><p>Detection precision 0.998 and recall 0.973 on 111 plants, about 11% error on root length, and a robot that reaches each root tip within 1 mm.</p></div>
+    </div>
+    <div class="panel">
+      <span class="title">The pipeline, step by step</span>
+      <div class="steps" role="tablist" aria-label="Pipeline stages" id="steps"></div>
+      <div class="step-body" id="step-body" role="tabpanel" aria-live="polite"></div>
+      <p class="cap">NPEC images are confidential, so the pipeline is described rather than shown.</p>
+    </div>
+    <div class="nums" aria-label="Detection results on 111 plants">
+      <div class="num"><span class="v">0.998</span><span class="k">detection precision (111 plants)</span></div>
+      <div class="num"><span class="v">0.973</span><span class="k">detection recall</span></div>
+      <div class="num"><span class="v">0.984</span><span class="k">mAP@50</span></div>
+      <div class="num"><span class="v">≈11%</span><span class="k">sMAPE on root length, course Kaggle</span></div>
+    </div>
+    <div class="prose">
+      <h4>Three failures that shaped it</h4>
+      <ul>
+        <li><strong>Labelling by hand was too slow.</strong> Painting every root pixel was out of the question. I wrote a tool that marks the highest and lowest root points of each plant and joins them with a shortest-path search through the root mask, then checked and repaired more than 100 images instead of drawing them.</li>
+        <li><strong>Seed predictions were noisy.</strong> Extra training data made the seed model worse. Going through it, I found it was really two different datasets merged into one. I trained one model on stand-alone seeds and one on the combined data, then kept only the pixels both agreed on. That gave the cleanest seed detection of anything I tried.</li>
+        <li><strong>Segmentation can't separate crossing plants.</strong> A mask says "root", not "whose root". I used my own segmentation models to auto-label a detection dataset, then trained an RT-DETR detector to draw one box per plant.</li>
+      </ul>
+    </div>
+    <div class="prose">
+      <h4>Then the robot</h4>
+      <p>The second half moved the result onto a simulated Opentrons OT-2 liquid handler. I mapped its work envelope, tuned a PID controller that reaches targets within 1&nbsp;mm, and trained a PPO reinforcement-learning controller with a curriculum: the goal radius starts at 100&nbsp;mm and shrinks by 10% each time the agent succeeds 80% of the time. After low-learning-rate fine-tuning it landed within 1&nbsp;mm in 48 of 100 test episodes, with a best case of 0.21&nbsp;mm. The PID controller was more reliable, so it drove the final integration, where the vision pipeline finds each root tip and the robot inoculates it.</p>
+    </div>
+    <p class="note"><strong>What I'd do differently.</strong> My rule for where the main root starts fits the competition images but not every plant. I proposed adding time: roots grow and scratches don't, so tracking tips across frames would separate signal from noise, with the current pipeline producing the pseudo-labels.</p>
+    <div class="tags"><span class="tag">PyTorch</span><span class="tag">SegFormer MiT-B3</span><span class="tag">RT-DETR</span><span class="tag">OpenCV</span><span class="tag">graph search</span><span class="tag">PyBullet</span><span class="tag">Stable-Baselines3 PPO</span><span class="tag">PID control</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#work"><span class="label">← Back</span><b>All projects</b></a><a class="next" href="#ownership"><span class="label">Part 2 →</span><b>Pixel ownership</b></a></nav>
+</article>
+
+<!-- ============ Y2C ============ -->
+<article class="view" data-view="ownership" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y2·C · Untangling plant roots, part 2 of 3</span>
+    <h2>Pixel ownership: can colour cues untangle crossing roots?</h2>
+    <p class="intro">The weak point of my pipeline was the overlap between plants. About 32% of root biomass falls inside overlapping bounding boxes, where a box can't tell you which plant a pixel belongs to. If I paint what is already known in distinct colours, can a segmentation model carry that ownership into the ambiguous zone?</p>
+    <div class="facts"><div><span class="label">When</span><b>Feb – Apr 2026</b></div><div><span class="label">Team</span><b>Individual study</b></div><div><span class="label">Focus</span><b>Research design &amp; statistics</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Bounding boxes can't tell which plant owns a root pixel where plants overlap, about 32% of root biomass, and no ground-truth labels existed for those crossings.</p></div>
+      <div><span class="label">My approach</span><p>Built a synthetic generator with known pixel owners, gave a SegFormer colour-coded context, and tested it against a box-only baseline with paired, non-parametric and bootstrap statistics.</p></div>
+      <div><span class="label">Achievement</span><p>IoU in the overlap rose from 0.671 to 0.776 (p ≈ 1.2 × 10⁻⁶, n = 60), with the limits of a synthetic-only test stated clearly.</p></div>
+    </div>
+    <div class="prose">
+      <ul>
+        <li><strong>No ground truth existed</strong> for who owns which pixel in a real crossing. I built a synthetic generator that takes clean single plants, overlaps them so their roots genuinely cross, and records the true owner of every pixel.</li>
+        <li><strong>Baseline:</strong> the best a detector can do on its own, splitting the conflict zone down its middle.</li>
+        <li><strong>Model:</strong> a SegFormer that sees each plant's shoot and its roots outside the overlap painted in distinct colours, and must label the uncoloured conflict zone.</li>
+        <li><strong>Analysis:</strong> paired comparison on 60 evaluation images, with a paired <i>t</i>-test, a Wilcoxon signed-rank test and a 10,000-sample bootstrap so the conclusion doesn't rest on one assumption.</li>
+      </ul>
+    </div>
+    <div class="panel chart" role="figure" aria-labelledby="iou-cap">
+      <div class="charts2">
+        <svg viewBox="0 0 320 130" aria-label="Mean IoU: baseline 0.671, model 0.776">
+          <text x="0" y="12" class="strong">Mean IoU in the conflict zone</text>
+          <line class="grid" x1="110" y1="30" x2="110" y2="100"/><line class="grid" x1="186" y1="30" x2="186" y2="100"/><line class="grid" x1="262" y1="30" x2="262" y2="100"/>
+          <line class="axis" x1="110" y1="100" x2="300" y2="100"/>
+          <text x="110" y="116" text-anchor="middle">0.60</text><text x="186" y="116" text-anchor="middle">0.70</text><text x="262" y="116" text-anchor="middle">0.80</text>
+          <text x="0" y="52">Box mid-line</text>
+          <line class="grid" x1="110" y1="48" x2="164" y2="48" style="stroke-dasharray:2 3"/>
+          <circle class="dot-n" cx="164" cy="48" r="6"><title>Baseline mean IoU 0.671</title></circle>
+          <text x="174" y="52" class="strong">0.671</text>
+          <text x="0" y="82">Colour context</text>
+          <line class="grid" x1="110" y1="78" x2="244" y2="78" style="stroke-dasharray:2 3"/>
+          <circle class="dot-a" cx="244" cy="78" r="6"><title>Model mean IoU 0.776</title></circle>
+          <text x="254" y="82" class="strong">0.776</text>
+        </svg>
+        <svg viewBox="0 0 320 130" aria-label="Mean improvement 0.105 IoU, 95% CI 0.065 to 0.146">
+          <text x="0" y="12" class="strong">Paired improvement, 95% CI</text>
+          <line class="grid" x1="90" y1="30" x2="90" y2="100"/><line class="grid" x1="160" y1="30" x2="160" y2="100"/><line class="grid" x1="230" y1="30" x2="230" y2="100"/>
+          <line class="zero" x1="20" y1="30" x2="20" y2="100"/>
+          <line class="axis" x1="20" y1="100" x2="300" y2="100"/>
+          <text x="20" y="116" text-anchor="middle">0</text><text x="90" y="116" text-anchor="middle">+0.05</text><text x="160" y="116" text-anchor="middle">+0.10</text><text x="230" y="116" text-anchor="middle">+0.15</text>
+          <line class="ci" x1="111" y1="62" x2="224" y2="62"><title>95% CI +0.065 to +0.146</title></line>
+          <line class="ci" x1="111" y1="56" x2="111" y2="68"/><line class="ci" x1="224" y1="56" x2="224" y2="68"/>
+          <circle class="dot-a" cx="168" cy="62" r="6"><title>Mean improvement +0.105 IoU</title></circle>
+          <text x="168" y="44" text-anchor="middle" class="strong">+0.105</text>
+          <text x="28" y="90">no effect</text>
+        </svg>
+      </div>
+      <p class="cap" id="iou-cap">n = 60 paired images · paired t = 5.22, p ≈ 1.2 × 10⁻⁶ (one-sided) · Wilcoxon p ≈ 5 × 10⁻⁶ · Cohen's d<sub>z</sub> = 0.67 (medium)</p>
+    </div>
+    <p class="note"><strong>What the result does not show.</strong> All evaluation images come from the same synthetic generator as the training data, so the test proves an improvement on that distribution, not on real plates. Real crossings have no per-pixel ownership labels yet, and a 2D image can't resolve roots stacked in depth. The next step I proposed is to hand-label a small set of real conflict zones and measure the gap.</p>
+    <p>Alongside the study I wrote the data management plan and ethics submission (the NPEC images are proprietary and never left local storage), presented an A0 poster, chaired our journal club and ran the final sprint as Scrum master.</p>
+    <div class="tags"><span class="tag">research design</span><span class="tag">synthetic data</span><span class="tag">hypothesis testing</span><span class="tag">bootstrap</span><span class="tag">effect sizes</span><span class="tag">SegFormer</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#phenotyping"><span class="label">← Part 1</span><b>Plant phenotyping</b></a><a class="next" href="#mlops"><span class="label">Part 3 →</span><b>Root disentangler in production</b></a></nav>
+</article>
+
+<!-- ============ Y2D ============ -->
+<article class="view" data-view="mlops" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y2·D · Untangling plant roots, part 3 of 3</span>
+    <h2>Root disentangler in production</h2>
+    <p class="intro">Our team turned the detector and the ownership model into a service a lab could run and keep improving. I was the main engineer: 129 of the repository's 222 commits are mine, including the API, inference pipeline, model registry, retraining logic, database layer and most of the tests.</p>
+    <div class="facts"><div><span class="label">When</span><b>Apr – Jun 2026</b></div><div><span class="label">Team</span><b>4 people</b></div><div><span class="label">Focus</span><b>MLOps</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Turn research models into a service a lab could run, correct and improve without the developers in the room.</p></div>
+      <div><span class="label">My approach</span><p>A tested Python package behind FastAPI, a feedback-and-approval loop, Airflow retraining with a promotion gate, an MLflow model registry and automatic deploys to the campus server.</p></div>
+      <div><span class="label">Achievement</span><p>Main engineer in a team of four (129 of 222 commits), with an 85% test-coverage gate and about seven minutes from merge to running server.</p></div>
+    </div>
+    <div class="panel" role="figure" aria-label="Continuous learning loop">
+      <span class="title">The continuous-learning loop</span>
+      <ol class="flow">
+        <li><span class="node"><b>Predict</b>operator uploads a plate</span></li>
+        <li><span class="node"><b>Feedback</b>marks a result right or wrong</span></li>
+        <li><span class="node"><b>Approve</b>supervisor accepts the sample</span></li>
+        <li><span class="node b"><b>Airflow</b>enough samples, or Friday 02:00</span></li>
+        <li><span class="node b"><b>Retrain + evaluate</b>logged to MLflow</span></li>
+        <li><span class="node a"><b>Promotion gate</b>beats the current model, or discard</span></li>
+        <li><span class="node a"><b>Hot-swap</b>new weights live, no restart</span></li>
+      </ol>
+      <p class="cap">The new model serves the next prediction. Every run stores the dataset hash and the IDs of the samples it was trained on.</p>
+    </div>
+    <div class="nums">
+      <div class="num"><span class="v">8</span><span class="k">services in Docker Compose</span></div>
+      <div class="num"><span class="v">18</span><span class="k">test modules in CI</span></div>
+      <div class="num"><span class="v">85%</span><span class="k">coverage gate on every PR</span></div>
+      <div class="num"><span class="v">~7 min</span><span class="k">from merge to running server</span></div>
+    </div>
+    <div class="prose"><ul>
+      <li>Python package with a FastAPI service and a command-line tool sharing the same code; Streamlit front end with separate pages for operators, scientists and engineers.</li>
+      <li>Backend, inference, front end, MLflow, Airflow, Postgres, MinIO and nginx, each in its own container.</li>
+      <li>The campus server sits behind a VPN, so GitHub couldn't reach it to trigger deploys. Instead, a Watchtower container inside the network polls the image registry and replaces any service whose image changed, with no manual step.</li>
+    </ul></div>
+    <div class="tags"><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">Airflow</span><span class="tag">MLflow</span><span class="tag">Postgres</span><span class="tag">MinIO</span><span class="tag">GitHub Actions</span><span class="tag">pytest</span><span class="tag">Prometheus</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#ownership"><span class="label">← Part 2</span><b>Pixel ownership</b></a><a class="next" href="#cancer"><span class="label">Next →</span><b>Cancer and gene mutations</b></a></nav>
+</article>
+
+<!-- ============ Y1A ============ -->
+<article class="view" data-view="cancer" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y1·A</span>
+    <h2>Cancer and gene mutations</h2>
+    <p class="intro">The block asked for a Power BI dashboard on a topic of our choice. I chose cancer genetics, with no biology background, and learned the domain while building it: from global incidence and mortality down to brain-tumour patients and their mutations.</p>
+    <div class="facts"><div><span class="label">When</span><b>Sep – Nov 2024</b></div><div><span class="label">Team</span><b>Individual</b></div><div><span class="label">Data</span><b>IARC · TCGA via GDC and cBioPortal</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Tell a clear story about cancer and gene mutations, a field I had no background in, using a tool that wasn't built for survival analysis.</p></div>
+      <div><span class="label">My approach</span><p>Learned the domain while building, combined global IARC statistics with TCGA patient data, and wrote the Kaplan–Meier analysis in R when Power BI couldn't.</p></div>
+      <div><span class="label">Achievement</span><p>A dashboard showing that IDH1-mutant patients had a median survival of 8.0 years against 2.2 without the mutation, and how IDH1 and TP53 interact.</p></div>
+    </div>
+    <div class="panel chart" role="figure" aria-labelledby="km-cap">
+      <span class="title">Overall survival in lower-grade glioma, by IDH1 status</span>
+      <div class="keyrow"><span class="key"><span class="sw" style="background:var(--plant-a)"></span>IDH1-mutant</span><span class="key"><span class="sw" style="background:var(--plant-b)"></span>IDH1 wild-type</span><span>dotted line: 50% survival</span></div>
+      <div class="scrollx"><svg id="km" viewBox="0 0 640 280" role="img" aria-label="Kaplan–Meier overall survival in TCGA lower-grade glioma. With IDH1 mutation (n=393): median 8.0 years, 70% alive at 5 years. Without (n=112): median 2.2 years, 37% alive at 5 years.">
+<line class="grid" x1="44" y1="236.0" x2="610" y2="236.0"/><text x="36" y="240.0" text-anchor="end">0%</text><line class="grid" x1="44" y1="181.0" x2="610" y2="181.0"/><text x="36" y="185.0" text-anchor="end">25%</text><line class="grid" x1="44" y1="126.0" x2="610" y2="126.0"/><text x="36" y="130.0" text-anchor="end">50%</text><line class="grid" x1="44" y1="71.0" x2="610" y2="71.0"/><text x="36" y="75.0" text-anchor="end">75%</text><line class="grid" x1="44" y1="16.0" x2="610" y2="16.0"/><text x="36" y="20.0" text-anchor="end">100%</text><text x="44.0" y="254" text-anchor="middle">0</text><text x="138.3" y="254" text-anchor="middle">3</text><text x="232.7" y="254" text-anchor="middle">6</text><text x="327.0" y="254" text-anchor="middle">9</text><text x="421.3" y="254" text-anchor="middle">12</text><text x="515.7" y="254" text-anchor="middle">15</text><text x="610.0" y="254" text-anchor="middle">18</text>
+<line class="axis" x1="44" y1="236" x2="610" y2="236"/>
+<text x="327.0" y="272" text-anchor="middle">years since diagnosis</text>
+<line class="median" x1="44" y1="126.0" x2="295.2" y2="126.0"/>
+<path class="km-wt" d="M44.0,16.0H57.3V18.2H58.0V20.4H59.0V22.5H60.7V24.7H61.1V27.0H61.6V29.2H62.4V31.4H63.6V33.7H64.2V36.0H64.7V38.2H64.8V40.4H65.1V42.7H66.1V45.0H71.1V47.2H71.2V49.5H72.1V51.8H74.1V54.1H74.2V56.5H74.5V58.9H76.0V61.2H77.4V63.6H78.3V66.0H80.1V68.4H85.2V70.9H86.5V76.3H90.2V79.2H90.3V82.0H91.2V84.9H92.3V87.8H92.7V90.7H96.0V93.9H96.3V97.1H96.6V100.3H99.8V103.6H103.0V106.9H106.6V110.3H107.3V113.7H108.0V117.2H110.7V120.8H114.1V128.0H114.5V135.2H115.6V138.8H136.6V143.4H146.4V148.3H186.0V155.6H216.2V163.7H222.9V171.7H264.8V184.6H394.2V201.7H597.0V218.9H597.0V218.9"/>
+<path class="km-mut" d="M44.0,16.0H44.7V16.6H47.2V17.2H48.3V17.8H50.5V18.4H53.0V19.0H53.7V19.6H64.8V20.2H77.0V20.9H81.7V21.6H82.0V22.4H83.3V23.1H84.2V23.9H89.8V24.7H92.5V25.5H93.7V26.4H94.3V27.3H100.0V28.2H103.1V29.2H105.5V30.2H112.2V31.2H115.1V32.3H120.5V33.5H123.7V34.7H124.5V36.0H126.2V37.2H126.8V38.5H127.0V39.7H129.0V41.0H129.4V42.3H131.1V43.7H139.7V45.1H141.0V48.0H142.0V49.5H144.2V51.0H148.2V52.6H149.2V54.2H151.2V55.9H152.2V57.6H153.9V59.3H159.1V61.1H159.4V63.0H160.6V64.9H165.6V66.9H172.4V69.2H173.1V71.5H176.6V73.8H177.7V76.2H180.7V78.7H198.6V81.4H206.8V84.3H208.9V87.2H210.4V90.1H211.3V93.0H235.0V96.1H240.5V99.2H240.8V102.3H240.9V105.4H258.6V108.8H276.6V112.7H290.2V116.9H293.1V121.5H295.2V126.3H302.3V131.5H324.0V137.3H351.7V143.5H395.6V151.9H398.1V160.3H423.8V169.8H426.7V179.2H448.2V188.7H453.1V198.2H496.4V210.8H521.5V210.8"/>
+<circle class="dot-wt" cx="114.1" cy="126.0" r="4.5"/>
+<circle class="dot-mut" cx="295.2" cy="126.0" r="4.5"/>
+<text x="303.2" y="118.0" class="strong">median 8.0 y</text>
+<text x="106.1" y="144.0" text-anchor="end" class="strong">median 2.2 y</text>
+<text x="459.1" y="164.0" class="lab-mut">IDH1-mutant · n = 393</text>
+<text x="399.3" y="232.0" class="lab-wt">IDH1 wild-type · n = 112</text>
+<g id="km-hover" style="display:none"><line id="km-x" class="cross" x1="0" y1="16" x2="0" y2="236"/><circle id="km-hm" class="dot-mut" r="4"/><circle id="km-hw" class="dot-wt" r="4"/></g>
+<rect id="km-hit" x="44" y="16" width="566" height="220" fill="transparent"/>
+</svg></div>
+      <p class="km-read" id="km-read" aria-live="polite">At 5 years: 70% of IDH1-mutant patients alive vs 37% wild-type. Hover or tap the chart to read other years.</p>
+      <p class="cap" id="km-cap">Kaplan–Meier estimates from the GDC export used in the dashboard (TCGA-LGG, 505 patients). Redrawn here from the original data; in the dashboard these curves were built with R.</p>
+    </div>
+    <div class="panel chart" role="figure" aria-labelledby="genes-cap">
+      <span class="title">Most frequently mutated genes in lower-grade glioma</span>
+      <div class="scrollx"><svg viewBox="0 0 640 248" role="img" aria-label="Most frequently mutated genes in TCGA lower-grade glioma: IDH1 76.8%, TP53 46.8%, ATRX 36.5%, CIC 21.4%, FUBP1 8.8%, PIK3CA 8.0%, MUC16 8.0%, NOTCH1 7.4% of cases."><line class="grid" x1="70.0" y1="6" x2="70.0" y2="216"/><text x="70.0" y="232" text-anchor="middle">0%</text><line class="grid" x1="202.5" y1="6" x2="202.5" y2="216"/><text x="202.5" y="232" text-anchor="middle">25%</text><line class="grid" x1="335.0" y1="6" x2="335.0" y2="216"/><text x="335.0" y="232" text-anchor="middle">50%</text><line class="grid" x1="467.5" y1="6" x2="467.5" y2="216"/><text x="467.5" y="232" text-anchor="middle">75%</text><line class="grid" x1="600.0" y1="6" x2="600.0" y2="216"/><text x="600.0" y="232" text-anchor="middle">100%</text><text x="60" y="23" text-anchor="end" class="strong">IDH1</text><path class="bar-hi" d="M70,12H473.0a4,4 0 0 1 4,4V24a4,4 0 0 1 -4,4H70Z"><title>IDH1: mutated in 76.8% of cases</title></path><text x="485.0" y="23" class="strong">76.8%</text><text x="60" y="49" text-anchor="end" class="strong">TP53</text><path class="bar-hi" d="M70,38H313.9a4,4 0 0 1 4,4V50a4,4 0 0 1 -4,4H70Z"><title>TP53: mutated in 46.8% of cases</title></path><text x="325.9" y="49" class="strong">46.8%</text><text x="60" y="75" text-anchor="end" class="">ATRX</text><path class="bar" d="M70,64H259.2a4,4 0 0 1 4,4V76a4,4 0 0 1 -4,4H70Z"><title>ATRX: mutated in 36.5% of cases</title></path><text x="271.2" y="75" class="strong">36.5%</text><text x="60" y="101" text-anchor="end" class="">CIC</text><path class="bar" d="M70,90H179.6a4,4 0 0 1 4,4V102a4,4 0 0 1 -4,4H70Z"><title>CIC: mutated in 21.4% of cases</title></path><text x="60" y="127" text-anchor="end" class="">FUBP1</text><path class="bar" d="M70,116H112.5a4,4 0 0 1 4,4V128a4,4 0 0 1 -4,4H70Z"><title>FUBP1: mutated in 8.8% of cases</title></path><text x="60" y="153" text-anchor="end" class="">PIK3CA</text><path class="bar" d="M70,142H108.3a4,4 0 0 1 4,4V154a4,4 0 0 1 -4,4H70Z"><title>PIK3CA: mutated in 8.0% of cases</title></path><text x="60" y="179" text-anchor="end" class="">MUC16</text><path class="bar" d="M70,168H108.3a4,4 0 0 1 4,4V180a4,4 0 0 1 -4,4H70Z"><title>MUC16: mutated in 8.0% of cases</title></path><text x="60" y="205" text-anchor="end" class="">NOTCH1</text><path class="bar" d="M70,194H105.3a4,4 0 0 1 4,4V206a4,4 0 0 1 -4,4H70Z"><title>NOTCH1: mutated in 7.4% of cases</title></path></svg></div>
+      <p class="cap" id="genes-cap">Share of TCGA-LGG cases with a mutation in each gene (GDC). Highlighted: the two genes the dashboard follows.</p>
+    </div>
+    <div class="prose"><ul>
+      <li>IDH1 is mutated in about three in four of these tumours, and those patients live far longer: median survival of 8.0 years against 2.2 years without the mutation.</li>
+      <li>TP53 alone tells a less clear story. Its survival curves cross after about eight years, so the dashboard goes on to compare cases with IDH1 only, TP53 only and both, and the copy-number changes (gene amplifications and deletions) that travel with each group.</li>
+      <li>Power BI can't draw Kaplan–Meier curves, which were the core of the story, so I wrote them in R and embedded the scripts in the report.</li>
+      <li>Documented with CRISP-DM, including the limits: restricted access to patient-level data, and survival differences that show association, not cause.</li>
+    </ul></div>
+    <div class="tags"><span class="tag">Power BI</span><span class="tag">R</span><span class="tag">survival analysis</span><span class="tag">cBioPortal</span><span class="tag">GDC</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#mlops"><span class="label">← Previous</span><b>Root disentangler in production</b></a><a class="next" href="#readmission"><span class="label">Next →</span><b>Hospital readmission</b></a></nav>
+</article>
+
+<!-- ============ Y1B ============ -->
+<article class="view" data-view="readmission" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y1·B</span>
+    <h2>Hospital readmission and length of stay</h2>
+    <p class="intro">101,765 diabetic patient encounters from 130 US hospitals. The task was to predict readmission within 30 days and length of stay. The first models looked excellent, which is what made me suspicious.</p>
+    <div class="facts"><div><span class="label">When</span><b>Nov 2024 – Jan 2025</b></div><div><span class="label">Team</span><b>Individual</b></div><div><span class="label">Domain</span><b>Healthcare</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Predict 30-day readmission and length of stay for 101,765 diabetic patient encounters.</p></div>
+      <div><span class="label">My approach</span><p>Questioned results that looked too good, rebalanced the classes, removed features that leak the outcome, and used the dataset's original research paper to decode diagnosis codes.</p></div>
+      <div><span class="label">Achievement</span><p>Exposed a 91%-accuracy model that caught only 0.4% of readmissions, built realistic models instead, and gave hospitals a concrete recommendation: test HbA1c consistently.</p></div>
+    </div>
+    <div class="nums">
+      <div class="num"><span class="v">91%</span><span class="k">accuracy of the first readmission models</span></div>
+      <div class="num"><span class="v" style="color:var(--plant-a)">0.4%</span><span class="k">of actual readmissions the logistic regression caught (recall 0.004)</span></div>
+    </div>
+    <div class="prose"><ul>
+      <li>Only about 10% of encounters are early readmissions, so predicting "no" every time scores 90%. I rebalanced with SMOTE and judged models on recall and F1.</li>
+      <li>The strongest length-of-stay predictors (number of medications, lab procedures, discharge disposition) are only known by the end of the stay. Using them predicts the past, so I restricted the model to information available at admission and accepted the lower score.</li>
+      <li>The diagnosis columns are raw ICD-9 codes. I grouped them using the paper that published the dataset (Strack et al., 2014) and kept only each patient's first visit, since repeat stays may follow different patterns.</li>
+      <li>Clustering found no clear structure, which helped explain the ceiling. My conclusion for hospitals: the HbA1c test is missing for most patients, and collecting it consistently would do more than a better model.</li>
+    </ul></div>
+    <div class="tags"><span class="tag">scikit-learn</span><span class="tag">XGBoost</span><span class="tag">SMOTE</span><span class="tag">clustering</span><span class="tag">SQL</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#cancer"><span class="label">← Previous</span><b>Cancer and gene mutations</b></a><a class="next" href="#ocutrack"><span class="label">Next →</span><b>OCUTRACK</b></a></nav>
+</article>
+
+<!-- ============ Y1C ============ -->
+<article class="view" data-view="ocutrack" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y1·C</span>
+    <h2>OCUTRACK: eye-state detection</h2>
+    <p class="intro">The brief: build an image classifier on a dataset you collect yourself. I chose open versus closed eyes, as the base for blink tracking in driver-fatigue and eye-strain applications. The dataset turned into a project of its own.</p>
+    <div class="facts"><div><span class="label">When</span><b>Feb – Apr 2025</b></div><div><span class="label">Team</span><b>Individual</b></div><div><span class="label">Focus</span><b>Vision, fairness, UX</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Build an eye-state classifier on a dataset I had to collect myself.</p></div>
+      <div><span class="label">My approach</span><p>Turned ~300 videos into ~150,000 eye crops, labelled them with an active-learning loop, removed near-duplicates, then iterated CNNs and audited the model for bias.</p></div>
+      <div><span class="label">Achievement</span><p>A working web app that tracks blinks on a live webcam, and a clear picture of which groups the model needed more data for.</p></div>
+    </div>
+    <div class="panel" role="figure" aria-label="Dataset construction">
+      <span class="title">Building the dataset</span>
+      <ol class="flow">
+        <li><span class="node"><b>~300 videos</b>people facing a camera</span></li>
+        <li><span class="node"><b>~150,000 eye crops</b>MediaPipe Face Mesh, left and right</span></li>
+        <li><span class="node a"><b>Active learning</b>auto-label at ≥95% confidence, retrain every 25 videos</span></li>
+        <li><span class="node"><b>Deduplicate</b>perceptual hashing removes ~99%</span></li>
+        <li><span class="node b"><b>Open / closed</b>compact, varied dataset</span></li>
+      </ol>
+    </div>
+    <div class="prose"><ul>
+      <li>Model iterations from an MLP baseline through CNNs with augmentation and class weights to transfer learning, with error analysis at each step.</li>
+      <li>A bias audit: the data under-represented darker skin tones, East Asian eye shapes and children, and the model was failing on East Asian faces. For a drowsiness alert, that means the system is least safe for exactly the drivers it saw least.</li>
+      <li>A working Flask web app that runs the model on a live webcam feed and reports blink rate. A think-aloud study with users led me to split the camera view and the results into separate screens.</li>
+    </ul></div>
+    <p>Same block, side challenge: a retrieval-augmented chatbot for an events company. It runs a local Llama&nbsp;3.1 model, OCRs scanned brochures, and is prompted to say it doesn't know rather than guess.</p>
+    <div class="tags"><span class="tag">TensorFlow</span><span class="tag">MediaPipe</span><span class="tag">active learning</span><span class="tag">fairness</span><span class="tag">Flask</span><span class="tag">LangChain</span><span class="tag">FAISS</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#readmission"><span class="label">← Previous</span><b>Hospital readmission</b></a><a class="next" href="#markets"><span class="label">Next →</span><b>Market events from minute data</b></a></nav>
+</article>
+
+<!-- ============ Y1D ============ -->
+<article class="view" data-view="markets" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y1·D</span>
+    <h2>Market events from minute data</h2>
+    <p class="intro">For a fintech client we looked for patterns in ten years of NASDAQ-100 data. I built the feature-engineering pipeline for Booking Holdings (BKNG).</p>
+    <div class="facts"><div><span class="label">When</span><b>Apr – Jun 2025</b></div><div><span class="label">Team</span><b>Team project</b></div><div><span class="label">Focus</span><b>Time series</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Find signals for sudden market moves in ten years of minute-level stock data.</p></div>
+      <div><span class="label">My approach</span><p>Built and unit-tested the feature pipeline for BKNG: cleaned minute bars, daily context, technical indicators and event labels.</p></div>
+      <div><span class="label">Achievement</span><p>The data foundation for the team's CNN/LSTM event model, and a teammate's verdict that the project would not have succeeded without me.</p></div>
+    </div>
+    <div class="panel" role="figure" aria-label="Feature pipeline">
+      <span class="title">The feature pipeline</span>
+      <ol class="flow">
+        <li><span class="node"><b>Minute bars</b>trading hours only, gaps filled</span></li>
+        <li><span class="node"><b>Daily context</b>52-week high/low, 30-day volume per minute</span></li>
+        <li><span class="node"><b>Indicators</b>VWAP, moving averages, calendar features</span></li>
+        <li><span class="node a"><b>Labels</b>crash, dip or rally in a future window</span></li>
+        <li><span class="node b"><b>CNN/LSTM</b>event classifier</span></li>
+      </ol>
+      <p class="cap">The pipeline has its own unit tests.</p>
+    </div>
+    <blockquote>"You really stepped up to the mark. Without you, this project would not have succeeded."<cite>Teammate, anonymous peer review</cite></blockquote>
+    <div class="tags"><span class="tag">pandas</span><span class="tag">time series</span><span class="tag">feature engineering</span><span class="tag">unittest</span><span class="tag">Keras</span><span class="tag">SQL</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#ocutrack"><span class="label">← Previous</span><b>OCUTRACK</b></a><a class="next" href="#emotion"><span class="label">Next →</span><b>Emotion in dialogue</b></a></nav>
+</article>
+
+<!-- ============ Y2A ============ -->
+<article class="view" data-view="emotion" hidden>
+  <a class="back" href="#work">← All projects</a>
+  <header class="case-head">
+    <span class="code">Y2·A</span>
+    <h2>Emotion in dialogue</h2>
+    <p class="intro">Classifying the emotion of each line in TV-show transcripts. We went from Naive Bayes and SVM baselines to a fine-tuned DistilBERT, compared it with prompting a large language model, ran error analysis, explained predictions token by token with layer-wise relevance propagation, added a translation step and wrote a model card. My focus was the analysis side: error analysis and explainability.</p>
+    <div class="facts"><div><span class="label">When</span><b>Sep – Oct 2025</b></div><div><span class="label">Team</span><b>Team project</b></div><div><span class="label">Focus</span><b>NLP</b></div></div>
+  </header>
+  <div class="case-body">
+    <div class="summary" aria-label="Summary">
+      <div><span class="label">The challenge</span><p>Classify the emotion of each line in TV-show dialogue, where the meaning depends on what came before.</p></div>
+      <div><span class="label">My approach</span><p>Moved from classic baselines to a fine-tuned DistilBERT and LLM prompting, then used error analysis and token-level explanations to see where and why it failed.</p></div>
+      <div><span class="label">Achievement</span><p>Showed why sentence-level models hit a ceiling on this task and proposed a model with contextual memory as the research direction.</p></div>
+    </div>
+    <p class="note"><strong>The open question I left with.</strong> Emotion in a story depends on what happened earlier. A line like "well, that went perfectly" means the opposite after a loss. A model that reads one sentence at a time can't see that, whatever its size. What the task needs is a model with contextual memory: one that keeps track of earlier passages and reads each line in that light. I'd like to research that properly.</p>
+    <blockquote>"It was obvious to me that you were very passionate about the topic and went out of your way to work on and research things that were outside of the scope of the project."<cite>Teammate, anonymous peer review</cite></blockquote>
+    <div class="tags"><span class="tag">Hugging Face</span><span class="tag">DistilBERT</span><span class="tag">prompt engineering</span><span class="tag">LRP</span><span class="tag">machine translation</span></div>
+  </div>
+  <nav class="pager" aria-label="More projects"><a href="#markets"><span class="label">← Previous</span><b>Market events from minute data</b></a><a class="next" href="#phenotyping"><span class="label">Back to the start →</span><b>Plant phenotyping</b></a></nav>
+</article>
+
+<footer>
+  <span class="label">Hristiyan Georgiev · Breda, Netherlands</span>
+  <span class="label">Projects from the BUas ADS&amp;AI programme, 2024–2026</span>
+</footer>
+</main>
+
+<script>
+/* ---------- routing ---------- */
+(function(){
+  const views=[...document.querySelectorAll('[data-view]')];
+  const names=views.map(v=>v.dataset.view);
+  let current=null;
+  function route(){
+    const h=(location.hash||'').slice(1);
+    const target=names.includes(h)?h:'home';
+    if(target!==current){
+      views.forEach(v=>{v.hidden=v.dataset.view!==target});
+      current=target;
+      if(target!=='home'){ window.scrollTo(0,0); }
+      document.dispatchEvent(new CustomEvent('viewchange',{detail:target}));
+    }
+    if(target==='home' && h && document.getElementById(h)){
+      requestAnimationFrame(()=>document.getElementById(h).scrollIntoView());
+    } else if(target==='home' && (!h || h==='home')) { window.scrollTo(0,0); }
+  }
+  window.addEventListener('hashchange',route); route();
+  const bar=document.getElementById('topbar');
+  const onScroll=()=>bar.classList.toggle('scrolled',window.scrollY>8);
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+
+/* ---------- plate drawing (hero + thumbnail) ---------- */
+(function(){
+  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function growPlant(r,x0,y0,drift,len){
+    const main=[[x0,y0]]; let w=0;
+    for(let i=1;i<=len;i++){const t=i/len; w+=(r()-.5)*1.6; w*=.9;
+      const x=x0+drift*120/(1+Math.exp(-(t-.5)*9))-drift*120/(1+Math.exp(4.5))+w; main.push([x,y0+i*4.3]);}
+    const laterals=[];
+    for(let i=12;i<main.length-8;i+=7+Math.floor(r()*6)){
+      const side=r()<.5?-1:1; let [lx,ly]=main[i]; let la=Math.PI/2+side*(.7+r()*.5);
+      const pts=[[lx,ly]]; const n=9+Math.floor(r()*(20-i/main.length*10));
+      for(let k=0;k<n;k++){la+=(Math.PI/2-la)*.06+(r()-.5)*.25; lx+=Math.cos(la)*3.2; ly+=Math.sin(la)*3.2; pts.push([lx,ly]);}
+      laterals.push(pts);
+    }
+    return {main,laterals};
+  }
+  const bbox=p=>{let xs=[],ys=[];[p.main,...p.laterals].forEach(s=>s.forEach(([x,y])=>{xs.push(x);ys.push(y)}));return[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)]};
+  const r=rng(7);
+  const PA=growPlant(r,125,92,1,62), PB=growPlant(r,295,100,-1,57);
+  const BA=bbox(PA), BB=bbox(PB);
+  const IX=[Math.max(BA[0],BB[0]),Math.max(BA[1],BB[1]),Math.min(BA[2],BB[2]),Math.min(BA[3],BB[3])];
+  const MID=(IX[0]+IX[2])/2;
+  const inZone=(x,y)=>x>IX[0]&&x<IX[2]&&y>IX[1]&&y<IX[3];
+
+  function draw(cv,t,opts){
+    const W=opts.w,H=opts.h; const box=cv.getBoundingClientRect(); const pw=Math.round(box.width)||W;
+    const dpr=window.devicePixelRatio||1; cv.width=pw*dpr; cv.height=Math.round(pw*H/W)*dpr;
+    const c=cv.getContext('2d'); const s=pw*dpr/W; c.setTransform(s,0,0,s,0,0); c.clearRect(0,0,W,H);
+    c.save(); c.translate(opts.dx||0,opts.dy||0); if(opts.scale) c.scale(opts.scale,opts.scale);
+    const A=css('--plant-a'),B=css('--plant-b'),ink=css('--ink'),muted=css('--muted');
+    // conflict zone
+    c.save(); c.globalAlpha=.08; c.fillStyle=ink; c.fillRect(IX[0],IX[1],IX[2]-IX[0],IX[3]-IX[1]); c.restore();
+    [[BA,A],[BB,B]].forEach(([b,col])=>{c.save();c.setLineDash([4,4]);c.strokeStyle=col;c.globalAlpha=.6;c.lineWidth=1;c.strokeRect(b[0]-4,b[1]-4,b[2]-b[0]+8,b[3]-b[1]+8);c.restore();});
+    if(t<1){c.save();c.globalAlpha=(1-t)*.8;c.setLineDash([2,3]);c.strokeStyle=ink;c.beginPath();c.moveTo(MID,IX[1]);c.lineTo(MID,IX[3]);c.stroke();c.restore();}
+    function seg(pts,w,own){
+      for(let i=1;i<pts.length;i++){
+        const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; const mx=(x0+x1)/2,my=(y0+y1)/2;
+        const z=inZone(mx,my); const ownCol=own==='A'?A:B; const baseCol=mx<MID?A:B;
+        c.lineWidth=w; c.lineCap='round';
+        if(!z||t>=1){c.globalAlpha=1;c.strokeStyle=ownCol;c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();continue;}
+        c.globalAlpha=1-t; c.strokeStyle=baseCol; c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();
+        c.globalAlpha=t; c.strokeStyle=ownCol; c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();
+      }
+      c.globalAlpha=1;
+    }
+    [[PA,'A'],[PB,'B']].forEach(([p,o])=>{p.laterals.forEach(l=>seg(l,1.2,o)); seg(p.main,2.4,o);});
+    [[PA,A],[PB,B]].forEach(([p,col])=>{const [x,y]=p.main[0];c.fillStyle=col;
+      c.beginPath();c.ellipse(x-9,y-6,10,5,-.5,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(x+9,y-6,10,5,.5,0,Math.PI*2);c.fill();});
+    if(opts.labels){
+      c.font='500 10px "IBM Plex Mono", ui-monospace, monospace'; c.fillStyle=ink; c.textAlign='left';
+      c.fillText('conflict zone',IX[0]+4,Math.min(IX[3]+14,398));
+      c.fillStyle=muted; c.textAlign='center'; c.fillText('agar plate · schematic',210,52);
+    }
+    c.restore();
+  }
+  const hero=document.getElementById('plate'), slider=document.getElementById('own'), read=document.getElementById('own-read');
+  const thumb=document.getElementById('thumb-roots');
+  function t(){return slider? slider.value/100 : 1}
+  function msg(){const v=t();
+    read.textContent = v<.15 ? 'Bounding boxes alone split the overlap down the middle, so roots that cross it change colour halfway. Drag the slider.'
+      : v>.85 ? 'With colour context, each root keeps its true owner through the crossing. In my study this raised IoU in the overlap from 0.671 to 0.776.'
+      : 'Blending the two: the colour-context model reassigns the pixels the box split got wrong.'; }
+  function drawAll(){
+    if(hero && !hero.closest('[hidden]')) draw(hero,t(),{w:420,h:420,labels:true});
+    if(thumb && !thumb.closest('[hidden]')) draw(thumb,1,{w:640,h:360,dx:110,dy:-60,scale:1});
+  }
+  if(slider){ slider.addEventListener('input',()=>{draw(hero,t(),{w:420,h:420,labels:true});msg();}); }
+  drawAll();
+  let rt; window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,120)});
+  document.addEventListener('viewchange',()=>requestAnimationFrame(drawAll));
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',drawAll); }catch(e){}
+  try{ new MutationObserver(drawAll).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); }catch(e){}
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawAll);
+})();
+
+/* ---------- pipeline stepper ---------- */
+(function(){
+  const S=[
+    ['Raw scan','Each image is a full agar plate from NPEC\'s scanner. The dish is cropped out with Otsu thresholding and contour detection.'],
+    ['Patching','Most of a plate is empty agar. Training only on patches that contain plant tissue keeps the signal and drops most of the empty background.'],
+    ['Segmentation','Three SegFormer (MiT-B3) models, one each for shoots, roots and seeds. The root model reached a validation F1 of 0.85.'],
+    ['Seed check','The seed data turned out to be two datasets merged into one. One model learned stand-alone seeds, one the combined data; only pixels both agree on are kept.'],
+    ['Detection','My segmentation models auto-labelled a detection set, then RT-DETR learned to draw one box per plant, even where roots cross.'],
+    ['Measuring','Each root is skeletonised and turned into a graph. Dijkstra\'s shortest path gives the length along the curve, not a straight line.'],
+    ['Robot','Root-tip pixels are mapped to the OT-2\'s deck coordinates, and a PID controller drives the pipette to each tip to inoculate it.']
+  ];
+  const bar=document.getElementById('steps'), body=document.getElementById('step-body'); if(!bar) return;
+  S.forEach(([name],i)=>{const b=document.createElement('button');b.type='button';b.className='step';b.id='step-'+i;b.setAttribute('role','tab');b.textContent=(i+1)+'. '+name;b.addEventListener('click',()=>sel(i));b.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){sel(Math.min(i+1,S.length-1));bar.children[Math.min(i+1,S.length-1)].focus()}if(e.key==='ArrowLeft'){sel(Math.max(i-1,0));bar.children[Math.max(i-1,0)].focus()}});bar.appendChild(b);});
+  function sel(i){[...bar.children].forEach((b,j)=>{b.setAttribute('aria-selected',j===i?'true':'false');b.tabIndex=j===i?0:-1});
+    body.innerHTML='<span class="n">'+String(i+1).padStart(2,'0')+'</span><div><h4></h4><p></p></div>';
+    body.querySelector('h4').textContent=S[i][0]; body.querySelector('p').textContent=S[i][1];}
+  sel(0);
+})();
+
+/* ---------- copy email ---------- */
+(function(){
+  const b=document.getElementById('copy-mail'), m=document.getElementById('mail'); if(!b) return;
+  b.addEventListener('click',()=>{
+    const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(m);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected';setTimeout(()=>b.textContent='Copy',1600)};
+    try{navigator.clipboard.writeText(m.textContent).then(done,sel)}catch(e){sel()}
+  });
+})();
+
+/* ---------- KM hover ---------- */
+(function(){
+  const D={"wt":[[0,1.0],[0.424,0.9901],[0.444,0.9802],[0.476,0.9703],[0.531,0.9603],[0.545,0.9502],[0.561,0.94],[0.586,0.9298],[0.624,0.9195],[0.641,0.9093],[0.657,0.8991],[0.663,0.8889],[0.671,0.8787],[0.704,0.8684],[0.862,0.8581],[0.865,0.8478],[0.893,0.8374],[0.956,0.8267],[0.961,0.816],[0.969,0.8052],[1.018,0.7945],[1.062,0.7836],[1.09,0.7727],[1.147,0.7618],[1.309,0.7503],[1.352,0.7257],[1.47,0.7127],[1.473,0.6998],[1.5,0.6868],[1.536,0.6736],[1.55,0.6604],[1.654,0.646],[1.662,0.6314],[1.673,0.6167],[1.774,0.6016],[1.875,0.5866],[1.99,0.5712],[2.012,0.5557],[2.034,0.5398],[2.122,0.5235],[2.229,0.4908],[2.242,0.4581],[2.278,0.4417],[2.946,0.4207],[3.255,0.3985],[4.517,0.3653],[5.476,0.3288],[5.689,0.2922],[7.023,0.2338],[11.138,0.1559],[17.585,0.0779],[17.585,0.0779]],"mut":[[0,1.0],[0.022,0.9973],[0.101,0.9947],[0.137,0.992],[0.208,0.9892],[0.287,0.9865],[0.307,0.9837],[0.663,0.9808],[1.051,0.9776],[1.199,0.9744],[1.21,0.971],[1.251,0.9677],[1.279,0.9642],[1.457,0.9605],[1.541,0.9567],[1.582,0.9527],[1.599,0.9488],[1.78,0.9445],[1.878,0.9401],[1.955,0.9355],[2.168,0.9307],[2.261,0.9257],[2.434,0.9204],[2.535,0.9149],[2.56,0.9093],[2.615,0.9036],[2.634,0.8978],[2.639,0.8921],[2.702,0.8862],[2.716,0.8803],[2.771,0.8743],[3.044,0.8679],[3.086,0.8546],[3.118,0.8479],[3.187,0.841],[3.313,0.8338],[3.346,0.8265],[3.409,0.8188],[3.441,0.811],[3.496,0.8031],[3.661,0.7948],[3.671,0.7863],[3.707,0.7778],[3.866,0.7685],[4.082,0.7581],[4.107,0.7477],[4.216,0.7371],[4.252,0.7262],[4.348,0.715],[4.917,0.7029],[5.177,0.6897],[5.243,0.6764],[5.292,0.6631],[5.32,0.6499],[6.073,0.6361],[6.248,0.6219],[6.259,0.6078],[6.261,0.5936],[6.825,0.578],[7.398,0.5605],[7.83,0.5412],[7.921,0.5204],[7.989,0.4987],[8.214,0.4749],[8.906,0.4486],[9.785,0.4205],[11.181,0.3823],[11.261,0.3441],[12.079,0.3011],[12.17,0.258],[12.854,0.215],[13.01,0.172],[14.387,0.1147],[15.184,0.1147]]}, svg=document.getElementById('km'); if(!svg) return;
+  const X0=44,X1=610,Y0=16,Y1=236, hit=document.getElementById('km-hit'), g=document.getElementById('km-hover'),
+        ln=document.getElementById('km-x'), hm=document.getElementById('km-hm'), hw=document.getElementById('km-hw'), out=document.getElementById('km-read');
+  const S=(p,t)=>{let v=null;for(const [a,b] of p){if(a<=t)v=b;else break}return t>p[p.length-1][0]?null:v};
+  function show(ev){
+    const pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY; const q=pt.matrixTransform(svg.getScreenCTM().inverse());
+    const t=Math.max(0,Math.min(18,(q.x-X0)/(X1-X0)*18)); const x=X0+(X1-X0)*t/18;
+    const m=S(D.mut,t), w=S(D.wt,t); g.style.display='';
+    ln.setAttribute('x1',x); ln.setAttribute('x2',x);
+    if(m!=null){hm.style.display='';hm.setAttribute('cx',x);hm.setAttribute('cy',Y1-(Y1-Y0)*m)} else hm.style.display='none';
+    if(w!=null){hw.style.display='';hw.setAttribute('cx',x);hw.setAttribute('cy',Y1-(Y1-Y0)*w)} else hw.style.display='none';
+    const f=v=>v==null?'no data':Math.round(v*100)+'%';
+    out.textContent='At '+t.toFixed(1)+' years: IDH1-mutant '+f(m)+' alive, wild-type '+f(w)+'.';
+  }
+  hit.addEventListener('pointermove',show); hit.addEventListener('pointerdown',show);
+  hit.addEventListener('pointerleave',()=>{g.style.display='none'});
+})();
+</script>
+
+</body>
+</html>
